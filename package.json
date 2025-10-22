@@ -1,0 +1,65 @@
+{
+  "name": "karin-plugin-music",
+  "version": "1.0.0",
+  "author": "yusheng",
+  "type": "module",
+  "description": "基于Karin的点歌插件",
+  "homepage": "https://github.com/yusheng929/karin-plugin-music",
+  "bugs": {
+    "url": "https://github.com/yusheng929/karin-plugin-music/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yusheng929/karin-plugin-music.git"
+  },
+  "scripts": {
+    "app": "node lib/app.js",
+    "build": "tsup",
+    "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
+    "pub": "npm publish --access public"
+  },
+  "main": "lib/index.js",
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/express": "^5.0.1",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20.17.8",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.7.0",
+    "neostandard": "^0.11.9",
+    "node-karin": "*",
+    "tsup": "^8.5.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.3"
+  },
+  "karin": {
+    "main": "src/index.ts",
+    "apps": [
+      "lib/apps"
+    ],
+    "ts-apps": [
+      "src/apps"
+    ],
+    "static": [
+      "resources"
+    ],
+    "files": [
+      "config"
+    ]
+  },
+  "files": [
+    "/lib/**/*.js",
+    "/lib/**/*.d.ts",
+    "/config/*.json",
+    "resources",
+    "!lib/app.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "crypto-js": "^4.2.0"
+  }
+}
