@@ -1,24 +1,12 @@
-import crypto from 'crypto'
-import CryptoJS from 'crypto-js'
+import crypto from 'node:crypto'
+import { md5 } from './util'
 
-type AESMode = 'node' | 'kugou'
-
-interface AESOptions {
-  mode?: AESMode
-  key?: string
-}
-
-/**
- * AES 加密工具类
- * 支持：
- *  - mode: 'node'（Node.js 原生 crypto）
- *  - mode: 'kugou'（与酷狗官方 AES 加密结果一致）
- */
+interface AESOptions { key?: string, iv?: string }
 class AES {
   /**
    * 生成随机密钥
    */
-  static generateRandomKey (length = 16): string {
+  static RandomKey (length = 16): string {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     let result = ''
     for (let i = 0; i < length; i++) {
@@ -28,91 +16,19 @@ class AES {
   }
 
   /**
-   * Node 模式：派生 key 和 iv
-   */
-  static deriveNodeKeyAndIV (key: string) {
-    const keyHash = crypto.createHash('md5').update(key).digest('hex')
-    const derivedKey = keyHash.substring(0, 32)
-    const iv = crypto.createHash('md5').update(derivedKey).digest('hex')
-    return { derivedKey, iv }
-  }
-
-  /**
-   * 酷狗模式：与官方一致
-   */
-  static deriveKugouKeyAndIV (key: string) {
-    const keyHash = CryptoJS.MD5(key).toString().toUpperCase()
-    const aesKey = CryptoJS.enc.Utf8.parse(keyHash.substring(0, 32))
-    const iv = CryptoJS.enc.Utf8.parse(keyHash.substring(keyHash.length - 16))
-    return { aesKey, iv, keyHash }
-  }
-
-  /**
    * AES 加密
    * @param data 要加密的数据
-   * @param options 选项：{ mode?: 'node' | 'kugou', key?: string }
+   * @param options
    */
-  static encrypt (data: any, options: AESOptions = {}) {
-    const { mode = 'node', key = AES.generateRandomKey(16) } = options
-    const dataString = typeof data === 'string' ? data : JSON.stringify(data)
-
-    if (mode === 'kugou') {
-      // 🎵 酷狗模式
-      const { aesKey, iv } = AES.deriveKugouKeyAndIV(key)
-      const encrypted = CryptoJS.AES.encrypt(dataString, aesKey, {
-        iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      })
-      return { key, encryptedStr: encrypted.ciphertext.toString(CryptoJS.enc.Hex) }
-    } else {
-      // 🧩 Node 模式
-      const { derivedKey, iv } = AES.deriveNodeKeyAndIV(key)
-      const cipher = crypto.createCipheriv(
-        'aes-128-cbc',
-        Buffer.from(derivedKey, 'hex'),
-        Buffer.from(iv, 'hex')
-      )
-      cipher.setAutoPadding(true)
-      let encrypted = cipher.update(dataString, 'utf8', 'hex')
-      encrypted += cipher.final('hex')
-      return { key, encryptedStr: encrypted }
-    }
-  }
-
-  /**
-   * AES 解密
-   * @param encryptedData 加密的十六进制字符串
-   * @param options 选项：{ mode?: 'node' | 'kugou', key: string }
-   */
-  static decrypt (encryptedData: string, options: AESOptions & { key: string }) {
-    const { mode = 'node', key } = options
-
-    if (mode === 'kugou') {
-      const { aesKey, iv } = AES.deriveKugouKeyAndIV(key)
-      const cipherParams = CryptoJS.lib.CipherParams.create({
-        ciphertext: CryptoJS.enc.Hex.parse(encryptedData)
-      })
-
-      const decrypted = CryptoJS.AES.decrypt(cipherParams, aesKey, {
-        iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      })
-
-      return decrypted.toString(CryptoJS.enc.Utf8)
-    } else {
-      const { derivedKey, iv } = AES.deriveNodeKeyAndIV(key)
-      const decipher = crypto.createDecipheriv(
-        'aes-128-cbc',
-        Buffer.from(derivedKey, 'hex'),
-        Buffer.from(iv, 'hex')
-      )
-      decipher.setAutoPadding(true)
-      let decrypted = decipher.update(encryptedData, 'hex', 'utf8')
-      decrypted += decipher.final('utf8')
-      return decrypted
-    }
+  static encrypt (data: any, opt: AESOptions = {}) {
+    if (typeof data === 'object') data = JSON.stringify(data)
+    const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data)
+    const randomKey = opt.key || this.RandomKey().toLowerCase()
+    const key = md5(randomKey).substring(0, 32)
+    const iv = key.substring(key.length - 16, key.length)
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+    const dest = Buffer.concat([cipher.update(buffer), cipher.final()])
+    return { str: dest.toString('hex'), key: randomKey }
   }
 }
 

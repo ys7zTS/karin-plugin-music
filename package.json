@@ -24,6 +24,7 @@
     "@types/express": "^5.0.1",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20.17.8",
+    "@types/node-rsa": "^1.1.4",
     "cross-env": "^7.0.3",
     "eslint": "^9.7.0",
     "neostandard": "^0.11.9",
@@ -60,6 +61,7 @@
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "node-rsa": "^1.1.1"
   }
 }

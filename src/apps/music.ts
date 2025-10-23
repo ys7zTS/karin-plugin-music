@@ -1,4 +1,5 @@
 import { Cfg } from '@/config'
+import AES from '@/core/AES'
 import { KugoApi } from '@/core/kugou'
 import karin, { logger } from 'node-karin'
 
@@ -18,3 +19,8 @@ export const music = karin.command(/^#(qq|酷狗)?点歌(.*)$/i, async (m) => {
       return m.reply('目前仅支持 QQ 和 酷狗 点歌哦~')
   }
 }, { name: '点歌' })
+
+export const test = karin.command(/test/, async (e) => {
+  const a = AES.encrypt(JSON.stringify({ token: '123' }))
+  logger.info(a)
+})

@@ -1,3 +1,4 @@
+import { Cfg } from '@/config'
 import { KugoApi } from '@/core/kugou'
 import { delay } from '@/modules/common'
 import karin, { segment } from 'node-karin'
@@ -25,8 +26,16 @@ export const kugouQrcode = karin.command(/^#酷狗(音乐)?扫码登录$/, async
       case 4: {
         const token = res.token
         const ress = await client.getLoginByToken(token)
-        client.writeToken(token)
-        return m.reply(`登录成功~\n当前登录用户(${ress.nickname})`)
+        Cfg.setCfg('kugou.token', token)
+        Cfg.setCfg('kugou.userid', ress.data.userid)
+        client.writeCookie(ress.cookies!)
+        const msg = [
+          '登陆成功~\n',
+          `用户名: ${ress.data.nickname}\n`,
+          `是否VIP: ${ress.data.is_vip ? '是' : '否'}\n`,
+          `VIP到期时间: ${ress.data.vip_end_time}\n`
+        ]
+        return m.reply(msg)
       }
       default:
         return

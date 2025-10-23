@@ -4,7 +4,6 @@ import crypto from 'crypto'
 import { Cfg } from '@/config'
 import AES from './AES'
 import RSA from './RSA'
-import { logger } from 'node-karin'
 
 const md5 = (str: crypto.BinaryLike) => crypto.createHash('md5').update(str).digest('hex')
 export class KugoApi implements ApiType {
@@ -35,8 +34,8 @@ export class KugoApi implements ApiType {
 
   async init () {
     if (!this.mid) {
-      const guid = await this.getGuid()
-      this.mid = md5(guid)
+      const guid = md5(await this.getGuid())
+      this.mid = guid
       Cfg.setCfg('kugou.mid', guid)
     }
     if (!this.dfid) {
@@ -69,23 +68,20 @@ export class KugoApi implements ApiType {
    * @param ispost 是否为POST请求
    */
   async getSign (params: Record<string, any>, ispost = false) {
-    const salt = 'NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt'
+    const { signature, ...p } = params
     if (ispost) {
-      const values = []
-      for (const key in params) {
-        if (Object.prototype.hasOwnProperty.call(params, key) && key !== 'signature') {
-          const val = params[key] === undefined || params[key] === null ? '' : String(params[key])
-          values.push(val)
-        }
-      }
-      values.sort()
-      const concat = values.join('')
-      const hash = this.appid + concat + this.appid
-      return md5(hash).toUpperCase()
-    } else {
-      const str = Object.keys(params)
+      const str = Object.keys(p)
+        .map(i => p[i])
         .sort()
-        .map(i => `${i}=${params[i]}`)
+        .join('')
+      const hash = this.appid + str + this.appid
+      const sign = md5(hash)
+      return sign
+    } else {
+      const salt = 'NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt'
+      const str = Object.keys(p)
+        .sort()
+        .map(i => `${i}=${p[i] ?? ''}`)
         .join('')
       const hash = salt + str + salt
       const sign = md5(hash).toUpperCase()
@@ -106,12 +102,11 @@ export class KugoApi implements ApiType {
       'p.token': ''
     }
     params.signature = await this.getSign(params, true)
-    logger.info(params)
     const { data } = await axios.post('https://userservice.kugou.com/risk/v1/r_register_dev', btoa('{"uuid":""}'), {
       params
     })
     const { data: { dfid } } = data
-    if (!dfid) throw new Error('获取dfid失败')
+    if (!dfid) throw new Error(`获取dfid失败${JSON.stringify(data)}`)
     return dfid
   }
 
@@ -165,7 +160,7 @@ export class KugoApi implements ApiType {
   /** 通过token获取登录ck */
   async getLoginByToken (token: string = this.token, userid: number = this.userid) {
     const now = Date.now()
-    const e = AES.encrypt(JSON.stringify({ token }), { mode: 'kugou' })
+    const e = AES.encrypt(JSON.stringify({ token }))
     const t = RSA.encrypt(JSON.stringify({
       clienttime_ms: now,
       key: e.key
@@ -182,33 +177,28 @@ export class KugoApi implements ApiType {
       plat: 4,
       clienttime_ms: now,
       pk: t,
-      params: e.encryptedStr,
+      params: e.str,
       srcappid: this.srcappid,
       signature: ''
     }
-    params.signature = await this.getSign(params, !0)
-    logger.info(params)
-    const res = await axios.post('https://loginservice.kugou.com/v1/login_by_token_get', btoa(''), {
+    // params.signature = md5(`1014${Object.values(params).sort().join('')}1014`)
+    params.signature = await this.getSign(params)
+    const { data, headers } = await axios.post('https://loginservice.kugou.com/v1/login_by_token_get', null, {
       params,
       withCredentials: !0,
     })
-    logger.info(res)
-    if (!res.data.data) throw new Error(JSON.stringify(res.data))
-    // logger.info(headers['set-cookie'])
-    return res.data
+    if (!data.data || typeof data.data === 'string') throw new Error(JSON.stringify(data))
+    return { data: data.data, cookies: headers['set-cookie'] }
   }
 
-  writeToken (token: string) {
-    Cfg.setCfg('kugou.token', token)
-    this.token = token
-  }
-
-  writeUserid (userid: number) {
-    Cfg.setCfg('kugou.userid', userid)
-    this.userid = userid
-  }
-
-  md5 (str: crypto.BinaryLike) {
-    return crypto.createHash('md5').update(str).digest('hex')
+  writeCookie (cookies: string[]) {
+    const i: string[] = []
+    cookies.forEach(e => {
+      const ck = e.split(';')[0].trim()
+      if (ck.includes('=')) {
+        i.push(ck)
+      }
+    })
+    Cfg.setCfg('kugou.ck', i.join('; '))
   }
 }
