@@ -82,7 +82,7 @@ jobs:
         id: release_please
         with:
           release-type: node
-          package-name: "@ys7zTS/karin-plugin-music"
+          package-name: "karin-plugin-music"
 
       - name: 发布到 npm
         run: npm run pub
