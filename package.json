@@ -2,19 +2,23 @@
   "name": "@ys7zTS/karin-plugin-music",
   "version": "0.0.1",
   "author": "yusheng",
+  "license": "GPL-3.0",
   "type": "module",
+  "keywords": [
+    "karin-plugin"
+  ],
   "description": "基于Karin的点歌插件",
-  "homepage": "https://github.com/yusheng929/karin-plugin-music",
+  "homepage": "https://github.com/ys7zTS/karin-plugin-music",
   "bugs": {
-    "url": "https://github.com/yusheng929/karin-plugin-music/issues"
+    "url": "https://github.com/ys7zTS/karin-plugin-music/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yusheng929/karin-plugin-music.git"
+    "url": "git+https://github.com/ys7zTS/karin-plugin-music.git"
   },
   "scripts": {
     "app": "node lib/app.js",
-    "build": "tsup",
+    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
     "clean": "npm lib/cli/pr.js clean",
     "pub-beta": "npm publish --tag beta",
@@ -56,9 +60,12 @@
   "files": [
     "/lib/**/*.js",
     "/lib/**/*.d.ts",
-    "/config/*.json",
+    "/config",
     "resources",
-    "!lib/app.js"
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
