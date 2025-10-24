@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.3...v1.0.4) (2025-10-24)
+
+
+### Bug Fixes
+
+* 修复正则 ([b5d87e6](https://github.com/ys7zTS/karin-plugin-music/commit/b5d87e67358f496e29ef6c3d3e2a001df8564643))
+
 ## [1.0.3](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.2...v1.0.3) (2025-10-24)
 
 
