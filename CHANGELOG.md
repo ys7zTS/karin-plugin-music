@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.0...v1.0.1) (2025-10-24)
+
+
+### Bug Fixes
+
+* 更改包名 ([31fe10d](https://github.com/ys7zTS/karin-plugin-music/commit/31fe10d42f82625e1d455cae2033573d3a6d1f8e))
+* 细节优化 ([b0a1935](https://github.com/ys7zTS/karin-plugin-music/commit/b0a193562948673691cc62fcb76ac6d6298e70dc))
+
 ## 1.0.0 (2025-10-24)
 
 
