@@ -7,7 +7,7 @@ import karin, { segment } from 'node-karin'
 
 const timeout = new Map<string, NodeJS.Timeout>()
 export const music = karin.command(/^#(qq|酷狗)?点歌(\S+)(?:\s+(\d+))?$/i, async (m) => {
-  const reg = /^#(qq|酷狗)?点歌(.*)$/
+  const reg = /^#(qq|酷狗)?点歌(\S+)(?:\s+(\d+))?$/
   let [, platform, keyword, page = 1] = m.msg.match(reg) || []
   if (!keyword.trim()) return m.reply('歌名不能为空')
   if (!platform) platform = Cfg.getConfig.defaultPlatform
