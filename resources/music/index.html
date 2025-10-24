@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>音乐列表</title>
+  <link rel="stylesheet" href="{{pluResPath}}music/index.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>音乐列表</h1>
+      <div class="subtitle">当前平台: {{data.platform}}</div>
+    </div>
+
+    <div class="search-info">
+      当前搜索：<span class="search-keyword">{{data.keyword}}</span>
+    </div>
+
+    <div class="song-list">
+      {{each data.songs e i}}
+      <div class="song-item">
+        <div class="song-number num-{{i + 1}}">{{i + 1}}</div>
+        <img src="{{e.cover}}" alt="专辑封面" class="song-cover">
+        <div class="song-info">
+          <div class="song-title">
+            {{e.title}}
+            {{if e.vip}}
+            <span class="badge badge-vip">VIP</span>
+            {{/if}}
+          </div>
+          <div class="song-artist">{{e.artist}}</div>
+        </div>
+        <div class="song-duration">{{e.duration}}</div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="footer">
+      60s内, 你可以发送/听+数字来选择歌曲, 例如/听1
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,9 +1,6 @@
 export interface CfgType {
-  /** 通用配置 */
-  general: {
-    /** 点歌默认平台 */
-    defaule: 'qq'
-  }
+  /** 点歌默认平台 */
+  defaultPlatform: 'qq' | '酷狗'
   /** QQ音乐配置 */
   qq: {
     /** cookies */

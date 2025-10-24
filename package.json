@@ -1,6 +1,6 @@
 {
-  "name": "karin-plugin-music",
-  "version": "1.0.0",
+  "name": "@ys7zTS/karin-plugin-music",
+  "version": "0.0.1",
   "author": "yusheng",
   "type": "module",
   "description": "基于Karin的点歌插件",
@@ -16,10 +16,15 @@
     "app": "node lib/app.js",
     "build": "tsup",
     "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
+    "clean": "npm lib/cli/pr.js clean",
+    "pub-beta": "npm publish --tag beta",
+    "pr": "node lib/cli/pr.js",
+    "commit": "node lib/cli/commit.js",
     "pub": "npm publish --access public"
   },
   "main": "lib/index.js",
   "devDependencies": {
+    "@karinjs/plugin-puppeteer": "^1.0.20",
     "@types/crypto-js": "^4.2.2",
     "@types/express": "^5.0.1",
     "@types/lodash": "^4.17.16",
@@ -60,8 +65,6 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
-    "crypto-js": "^4.2.0",
-    "node-rsa": "^1.1.1"
+    "chokidar": "^4.0.3"
   }
 }

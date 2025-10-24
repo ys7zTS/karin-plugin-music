@@ -14,9 +14,7 @@ class Config {
   CfgCache: null | CfgType
   constructor () {
     this.defaultConfig = {
-      general: {
-        defaule: 'qq'
-      },
+      defaultPlatform: '酷狗',
       qq: {
         ck: ''
       },

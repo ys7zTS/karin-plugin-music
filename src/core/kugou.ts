@@ -1,11 +1,9 @@
 import { ApiType } from '@/types/core'
 import axios from 'node-karin/axios'
-import crypto from 'crypto'
 import { Cfg } from '@/config'
 import AES from './AES'
 import RSA from './RSA'
-
-const md5 = (str: crypto.BinaryLike) => crypto.createHash('md5').update(str).digest('hex')
+import { md5 } from '@/modules/common'
 export class KugoApi implements ApiType {
   appid: number
   mid: string
@@ -53,7 +51,29 @@ export class KugoApi implements ApiType {
     }
   }
 
-  async getSongInfo (hash: string) {
+  async getSongInfo (albumId: string, albumAudioId: string, hash: any) {
+    const params = {
+      appid: this.appid,
+      clienttime: Date.now(),
+      clientver: 20000,
+      dfid: this.dfid,
+      album_id: albumId,
+      album_audio_id: albumAudioId,
+      hash,
+      mid: this.mid,
+      platid: 4,
+      srcappid: this.srcappid,
+      token: this.token,
+      userid: this.userid,
+      uuid: this.mid,
+      signature: ''
+    }
+    params.signature = await this.getSign(params)
+    const { data } = await axios.get('https://wwwapi.kugou.com/play/songinfo', {
+      params
+    })
+    if (!data.data || typeof data.data === 'string') throw new Error(JSON.stringify(data))
+    return data.data
   }
 
   async getGuid () {

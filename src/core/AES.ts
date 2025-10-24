@@ -1,5 +1,5 @@
+import { md5 } from '@/modules/common'
 import crypto from 'node:crypto'
-import { md5 } from './util'
 
 interface AESOptions { key?: string, iv?: string }
 class AES {
