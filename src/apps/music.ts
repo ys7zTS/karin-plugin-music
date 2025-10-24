@@ -33,7 +33,7 @@ export const music = karin.command(/^#(qq|酷狗)?点歌(.*)$/i, async (m) => {
         data.songs.push({
           title: e.songname,
           artist: e.singername,
-          cover: (e.trans_param.union_cover as string).replace(/{size}/g, '300'),
+          cover: (e.trans_param.union_cover as string)?.replace(/{size}/g, '300') || '',
           duration: formatDuration(e.duration)
         })
       }
