@@ -5,15 +5,16 @@ import { render } from '@/modules/render'
 import { Root } from '@/Root'
 import karin, { segment } from 'node-karin'
 
-export const music = karin.command(/^#(qq|酷狗)?点歌(.*)$/i, async (m) => {
+const timeout = new Map<string, NodeJS.Timeout>()
+export const music = karin.command(/^#(qq|酷狗)?点歌(\S+)(?:\s+(\d+))?$/i, async (m) => {
   const reg = /^#(qq|酷狗)?点歌(.*)$/
-  let [, platform, keyword] = m.msg.match(reg) || []
-  if (!keyword) return m.reply('歌名不能为空')
+  let [, platform, keyword, page = 1] = m.msg.match(reg) || []
+  if (!keyword.trim()) return m.reply('歌名不能为空')
   if (!platform) platform = Cfg.getConfig.defaultPlatform
   const client = await KugoApi.create()
   switch (platform.toLowerCase()) {
     case '酷狗': {
-      const i = await client.search(keyword.trim(), 1, 10)
+      const i = await client.search(keyword.trim(), Number(page), 10)
       const data: {
         keyword: string,
         platform: string,
@@ -45,10 +46,8 @@ export const music = karin.command(/^#(qq|酷狗)?点歌(.*)$/i, async (m) => {
       }
       return true
     }
-    case 'qq':
-      break
     default:
-      return m.reply('目前仅支持 QQ 和 酷狗 点歌哦~')
+      return m.reply('目前仅支持 酷狗 点歌哦~')
   }
 }, { name: '点歌' })
 
@@ -62,15 +61,25 @@ export const test = karin.command(/^#听([1-9]|10)$/, async (m) => {
   return true
 })
 
-const event = (id: number | string, i: any, client: KugoApi) => {
+const event = (id: string, i: any, client: KugoApi) => {
+  if (timeout.has(id)) {
+    clearTimeout(timeout.get(id))
+    timeout.delete(id)
+  }
+  karin.emit(`${Root.pluginName}:song:${id}`, { rm: true })
   return new Promise(resolve => {
-    const timeout = setTimeout(() => {
+    const time = setTimeout(() => {
       karin.emit(`${Root.pluginName}:song:${id}`, { rm: true })
+      timeout.delete(id)
       resolve(false)
     }, 60000)
+    timeout.set(id, time)
     karin.once(`${Root.pluginName}:song:${id}`, async (data) => {
       if (data.rm) return true
-      clearTimeout(timeout)
+      if (timeout.has(id)) {
+        clearTimeout(timeout.get(id))
+        timeout.delete(id)
+      }
       const song = i[data.id - 1]
       const info = await client.getSongInfo(song.album_id, song.album_audio_id, song.hash)
       resolve(info)
