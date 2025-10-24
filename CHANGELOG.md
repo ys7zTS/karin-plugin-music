@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.1...v1.0.2) (2025-10-24)
+
+
+### Bug Fixes
+
+* 修复部分歌曲无法搜索 ([6dc6d98](https://github.com/ys7zTS/karin-plugin-music/commit/6dc6d9803b8fb910c8bdc89cc4e516018a67f85a))
+
 ## [1.0.1](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.0...v1.0.1) (2025-10-24)
 
 
