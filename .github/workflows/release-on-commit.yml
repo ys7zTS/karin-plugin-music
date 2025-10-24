@@ -1,7 +1,7 @@
 name: Release on Commit
 
 on:
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   build:
@@ -120,16 +120,16 @@ jobs:
         run: |
           rm -rf node_modules
 
-      - name: 将文件整理到 karin-plugin-ling 文件夹
+      - name: 将文件整理到 karin-plugin-music 文件夹
         run: |
-          mkdir -p karin-plugin-ling
+          mkdir -p karin-plugin-music
           find . -path "./.git" -prune -o -type f -print | while read file; do
-            mkdir -p "karin-plugin-ling/$(dirname "$file")"
-            cp "$file" "karin-plugin-ling/$file"
+            mkdir -p "karin-plugin-music/$(dirname "$file")"
+            cp "$file" "karin-plugin-music/$file"
           done
 
       - name: 创建 dev.zip
-        run: zip -r "dev-${{ env.SHORT_COMMIT_HASH }}.zip" karin-plugin-ling
+        run: zip -r "dev-${{ env.SHORT_COMMIT_HASH }}.zip" karin-plugin-music
 
       - name: 上传 dev.zip
         uses: actions/upload-artifact@v4
@@ -137,15 +137,14 @@ jobs:
           name: "dev-${{ env.SHORT_COMMIT_HASH }}.zip"
           path: "dev-${{ env.SHORT_COMMIT_HASH }}.zip"
 
-      - name: 删除 karin-plugin-ling 文件夹
-        run: rm -rf karin-plugin-ling
+      - name: 删除 karin-plugin-music 文件夹
+        run: rm -rf karin-plugin-music
 
       - name: 发布到 npm
         run: npm run pub-beta
         if: success()
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
 
       - name: 创建发行版
         id: create_release
@@ -164,7 +163,7 @@ jobs:
             ---
             <details>
             <summary>使用Git</summary>
-            
+
             **插件根目录** 下执行
             ```sh
             git pull
@@ -176,19 +175,19 @@ jobs:
             若报错缺失依赖，可先运行 `pnpm install` 安装或更新依赖。
 
             </details>
-           
+
 
             <details>
             <summary>使用包管理器</summary>
-          
+
             **Karin 根目录** 下执行
 
             ```sh
-            pnpm add karin-plugin-ling@${{ env.PKG_VERSION }} -w
+            pnpm add karin-plugin-music@${{ env.PKG_VERSION }} -w
             ```
 
             </details>
-           
+
 
             <details>
             <summary>使用预发行版（不推荐）</summary>
@@ -196,11 +195,11 @@ jobs:
             1. 下载名为 [build-${{ env.SHORT_COMMIT_HASH }}.zip](https://github.com/${{ github.repository }}/releases/download/pre-${{ env.SHORT_COMMIT_HASH }}/build-${{ env.SHORT_COMMIT_HASH }}.zip) 的压缩包
             2. 在 `karin/plugins/` 目录下解压该压缩包，选择替换所有文件。
             3. 完成后相关源码应在 `Karin根目录/plugins/karin-plugin-kkk/` 内<br><br>
-          
+
             若报错缺失依赖，可先运行 `pnpm install` 安装或更新依赖。
-          
+
             </details>
-            
+
             ---
             **此版本非正式版本，可能存在一些问题，请谨慎使用！**
             构建时间：${{ github.event.head_commit.timestamp }}

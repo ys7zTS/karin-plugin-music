@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   build:
@@ -45,7 +45,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: 删除开发依赖 
+      - name: 删除开发依赖
         run: npm run pr clean
 
       - name: 删除文件
@@ -82,14 +82,13 @@ jobs:
         id: release_please
         with:
           release-type: node
-          package-name: 'karin-plugin-ling'
+          package-name: "@ys7zTS/karin-plugin-music"
 
       - name: 发布到 npm
         run: npm run pub
         if: ${{ steps.release_please.outputs.release_created }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
 
       - name: 上传 release
         if: ${{ steps.release_please.outputs.release_created }}
