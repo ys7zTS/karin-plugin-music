@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.2...v1.0.3) (2025-10-24)
+
+
+### Bug Fixes
+
+* 新增可指定页面 ([b470f7a](https://github.com/ys7zTS/karin-plugin-music/commit/b470f7a800188c8add3be7566409039654023d25))
+
 ## [1.0.2](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.1...v1.0.2) (2025-10-24)
 
 
