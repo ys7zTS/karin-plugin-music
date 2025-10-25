@@ -38,7 +38,9 @@ export const kugouQrcode = karin.command(/^#酷狗(音乐)?扫码登录$/, async
         return m.reply(msg)
       }
       default:
-        return
+        await m.bot.recallMsg(m.contact, msg.messageId)
+        await m.reply('二维码过期，请重新发送#酷狗扫码登录', { reply: true })
+        return false
     }
     await delay(1000)
   }

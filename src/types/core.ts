@@ -6,3 +6,10 @@ export interface ApiType {
    */
   search (search: string, page?: number, pageSize?: number): Promise<any>
 }
+
+export interface EventOpt {
+  /** 音乐平台 */
+  platform?: string,
+  /** 页面 */
+  page?: number
+}
