@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.4...v1.0.5) (2025-10-25)
+
+
+### Bug Fixes
+
+* 优化html ([2ca3925](https://github.com/ys7zTS/karin-plugin-music/commit/2ca392546af7d9bbbcf51ab59b74c01b64b4bad8))
+* 优化操作逻辑，新增换页 ([1835f31](https://github.com/ys7zTS/karin-plugin-music/commit/1835f31364cad207267a415f6c0b3eeed2e93f09))
+
 ## [1.0.4](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.3...v1.0.4) (2025-10-24)
 
 
