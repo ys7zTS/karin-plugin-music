@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.5...v1.0.6) (2025-10-27)
+
+
+### Bug Fixes
+
+* 新增默认图 ([f5cd3ea](https://github.com/ys7zTS/karin-plugin-music/commit/f5cd3ea074ad02b936b6fda9c3c313155d4bc3b2))
+
 ## [1.0.5](https://github.com/ys7zTS/karin-plugin-music/compare/v1.0.4...v1.0.5) (2025-10-25)
 
 
