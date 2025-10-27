@@ -42,7 +42,7 @@ export class KugoApi implements ApiType {
     }
   }
 
-  async search (search: string, page = 1, pageSize = 20) {
+  async search (search: string, page = 1, pageSize = 10) {
     try {
       const { data } = await axios.get(`http://msearchcdn.kugou.com/api/v3/search/song?page=${page}&pagesize=${pageSize}&keyword=${encodeURI(search)}`)
       return data.data.info

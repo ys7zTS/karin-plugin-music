@@ -4,6 +4,8 @@ import { EventOpt } from '@/types/core'
 import { Cfg } from '@/config'
 import { formatDuration } from '@/modules/common'
 import { render } from '@/modules/render'
+import path from 'node:path'
+import { Root } from '@/Root'
 
 interface CLIMap {
   timeout: NodeJS.Timeout
@@ -54,7 +56,7 @@ class Api {
         data.songs.push({
           title: e.songname,
           artist: e.singername,
-          cover: (e.trans_param.union_cover as string)?.replace(/{size}/g, '300') || '',
+          cover: (e.trans_param.union_cover as string)?.replace(/{size}/g, '300') || path.join(Root.pluginPath, 'resources', 'music', 'default.png'),
           duration: formatDuration(e.duration)
         })
       }
